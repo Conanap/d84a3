@@ -47,5 +47,12 @@ void expensiveFeature1(double gr[max_graph_size][4], int path[max_graph_size][2]
 int checkForGoal(int x, int y, int pos[5][2]);
 
 // If you need to add any function prototypes yourself, you can do so *below* this line.
+void fwInit(double gr[max_graph_size][4], int size_X, int graph_size);
+bool isConnected(int a, int b, double gr[max_graph_size][4]);
+int isSameSpot(int a[2], int b[2]);
+int getState(int mouse_loc[2], int cat_loc[2], int cheese_loc[2], int size_X, int graph_size);
+double getQTable(double *QTable, int s, int a);
+double rngesus();
+
 #endif
 
