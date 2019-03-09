@@ -205,10 +205,10 @@ double QLearn_reward(double gr[max_graph_size][4], int mouse_pos[1][2], int cats
   }
 
   if(isSameSpot(mouse_pos[0], cats[0])) {
-    reward -= 500;
+    reward -= 6000;
   }
   if(isSameSpot(mouse_pos[0], cheeses[0])) {
-    reward += 100;
+    reward += 6000;
   }
 
   // if(reward)
