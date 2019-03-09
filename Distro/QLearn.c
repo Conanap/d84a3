@@ -61,7 +61,7 @@ void QLearn_update(int s, int a, double r, int s_new, double *QTable)
 
   double max = -inf;
   for(int i = 0; i < 4; i++) {
-    if (getQTable(QTable, s, a) > max) {
+    if (getQTable(QTable, s_new, i) > max) {
       max = getQTable(QTable, s_new, i);
     } 
   }
