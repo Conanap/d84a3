@@ -64,8 +64,8 @@ void QLearn_update(int s, int a, double r, int s_new, double *QTable)
 
   // Q(s,a)   += alpha   (r + gamma    max Q(s’,a’)   - Q(s,a))
   // assign so i don't want to risk function call
-  (*(QTable + (4 * s) + a)) += alpha * (r + lambda * max );
-  // (*(QTable + (4 * s) + a)) += alpha * (r + lambda * max - getQTable(QTable, s, a) );
+  // (*(QTable + (4 * s) + a)) += alpha * (r + lambda * max );
+  (*(QTable + (4 * s) + a)) += alpha * (r + lambda * max - getQTable(QTable, s, a) );
   
 }
 
@@ -205,10 +205,10 @@ double QLearn_reward(double gr[max_graph_size][4], int mouse_pos[1][2], int cats
   }
 
   if(isSameSpot(mouse_pos[0], cats[0])) {
-    reward -= 6000;
+    reward -= 100;
   }
   if(isSameSpot(mouse_pos[0], cheeses[0])) {
-    reward += 6000;
+    reward += 100;
   }
 
   // if(reward)
@@ -217,8 +217,8 @@ double QLearn_reward(double gr[max_graph_size][4], int mouse_pos[1][2], int cats
   // int mouse = mouse_pos[0][0] + (size_X * mouse_pos[0][1]);
   // int otloc = cheeses[0][0] + (size_X * cheeses[0][1]);
   // reward += 200 * (graph_size - dists[mouse][otloc])/graph_size;
-  // int otloc = cats[0][0] + (size_X * cats[0][1]);
-  // reward -= 200 * ((graph_size - dists[mouse][otloc]) / graph_size * 2);
+  // otloc = cats[0][0] + (size_X * cats[0][1]);
+  // reward -= 200 * ((graph_size - dists[mouse][otloc]) / graph_size);
 
   return reward;		// <--- of course, you will change this as well! no.
 }
