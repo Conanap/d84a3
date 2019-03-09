@@ -30,7 +30,7 @@
 */
 
 #include "QLearn.h"
-#define inf 9999999
+#define inf 99999999
 
 int dists[max_graph_size][max_graph_size];
 int distSet = 0;
@@ -54,21 +54,18 @@ void QLearn_update(int s, int a, double r, int s_new, double *QTable)
   /***********************************************************************************************
    * TO DO: Complete this function
    ***********************************************************************************************/
-//   Given <s, a, r, s’>
-// update 
-//     wi = wi + alpha (learning rate) [r+ gamma(discount)Q(s’) - Q(s)] * fi(s)
-//     (This is just doing gradient descent on weights)
 
   double max = -inf;
   for(int i = 0; i < 4; i++) {
     if (getQTable(QTable, s_new, i) > max) {
       max = getQTable(QTable, s_new, i);
-    } 
+    }
   }
 
   // Q(s,a)   += alpha   (r + gamma    max Q(s’,a’)   - Q(s,a))
   // assign so i don't want to risk function call
-  (*(QTable + (4 * s) + a)) += alpha * (r + lambda * max - getQTable(QTable, s, a) );
+  (*(QTable + (4 * s) + a)) += alpha * (r + lambda * max );
+  // (*(QTable + (4 * s) + a)) += alpha * (r + lambda * max - getQTable(QTable, s, a) );
   
 }
 
@@ -150,8 +147,13 @@ int QLearn_action(double gr[max_graph_size][4], int mouse_pos[1][2], int cats[5]
 
   int choice;
 
+  // if(pct > 0.7)
+  //   fprintf(stderr, "\t%f\n", pct);
   // lord, do i do rng
-  if(rngesus() > pct) {
+  double rng = rngesus();
+  if(rng > pct) {
+    // if(pct > 0.7)
+    // fprintf(stderr, "\t%f > %f\n", rng, pct);
     do {
       choice = rand() % 4;
     } while(!isConnected(mouse_pos[0][0] + (size_X * mouse_pos[0][1]), choice, gr));
@@ -197,13 +199,27 @@ double QLearn_reward(double gr[max_graph_size][4], int mouse_pos[1][2], int cats
    ***********************************************************************************************/ 
 
   double reward = 0;
+  if(!distSet) {
+    distSet = 1;
+    fwInit(gr, size_X, graph_size);
+  }
 
   if(isSameSpot(mouse_pos[0], cats[0])) {
-    reward -= 6000;
+    reward -= 500;
   }
   if(isSameSpot(mouse_pos[0], cheeses[0])) {
-    reward += 6000;
+    reward += 100;
   }
+
+  // if(reward)
+  //   return reward;
+  
+  // int mouse = mouse_pos[0][0] + (size_X * mouse_pos[0][1]);
+  // int otloc = cheeses[0][0] + (size_X * cheeses[0][1]);
+  // reward += 200 * (graph_size - dists[mouse][otloc])/graph_size;
+  // int otloc = cats[0][0] + (size_X * cats[0][1]);
+  // reward -= 200 * ((graph_size - dists[mouse][otloc]) / graph_size * 2);
+
   return reward;		// <--- of course, you will change this as well! no.
 }
 
@@ -394,7 +410,7 @@ int getState(int mouse_loc[2], int cat_loc[2], int cheese_loc[2], int size_X, in
   //    state = (i+(j*size_X)) + ((k+(l*size_X))*graph_size) + ((m+(n*size_X))*graph_size*graph_size)
   int state = (mouse_loc[0] + (mouse_loc[1] * size_X));
   state += ((cat_loc[0] + (cat_loc[1] * size_X)) * graph_size);
-  state += ((cheese_loc[0] + (cheese_loc[1] * size_X) * graph_size * graph_size));
+  state += ((cheese_loc[0] + (cheese_loc[1] * size_X)) * graph_size * graph_size);
   return state;
 }
 
@@ -409,16 +425,16 @@ bool isConnected(int a, int b, double gr[max_graph_size][4])
 
 void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 {
-	for (int x = 0; x < graph_size; x++)
+	for (int x = 0; x < size_X; x++)
 	{
-		for (int y = 0; y < graph_size; y++)
+		for (int y = 0; y < graph_size / size_X; y++)
 		{
 			dists[x][y] = inf;
 		}
 	}
 
 	// init connected
-	for (int i = 0; i < graph_size; i++)
+	for (int i = 0; i < size_X; i++)
 	{
 		dists[i][i] = 0;
 		if (i - 1 >= 0 && isConnected(i, 3, gr))
@@ -439,11 +455,11 @@ void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 		}
 	}
 
-	for (int k = 0; k < graph_size; k++)
+	for (int k = 0; k < size_X; k++)
 	{
-		for (int i = 0; i < graph_size; i++)
+		for (int i = 0; i < size_X; i++)
 		{
-			for (int j = 0; j < graph_size; j++)
+			for (int j = 0; j < size_X; j++)
 			{
 				if (dists[i][j] > dists[i][k] + dists[k][j])
 				{
@@ -452,4 +468,9 @@ void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 			}
 		}
 	}
+}
+
+int manDist(int x1, int y1, int x2, int y2)
+{
+	return (abs(x1 - x2) + abs(y1 - y2));
 }

@@ -53,6 +53,7 @@ int isSameSpot(int a[2], int b[2]);
 int getState(int mouse_loc[2], int cat_loc[2], int cheese_loc[2], int size_X, int graph_size);
 double getQTable(double *QTable, int s, int a);
 double rngesus();
+int manDist(int x1, int y1, int x2, int y2);
 
 #endif
 
