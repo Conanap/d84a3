@@ -154,7 +154,7 @@ int QLearn_action(double gr[max_graph_size][4], int mouse_pos[1][2], int cats[5]
   if(rngesus() > pct) {
     do {
       choice = rand() % 4;
-    } while(!isConnected(mouse_pos[0][0] * size_X + mouse_pos[0][1], choice, gr));
+    } while(!isConnected(mouse_pos[0][0] + (size_X * mouse_pos[0][1]), choice, gr));
     return choice;
   }
 
@@ -163,7 +163,7 @@ int QLearn_action(double gr[max_graph_size][4], int mouse_pos[1][2], int cats[5]
   int state = getState(mouse_pos[0], cats[0], cheeses[0], size_X, graph_size);
 
   for(int i = 0; i < 4; i++) {
-    if(!isConnected(mouse_pos[0][0] * size_X + mouse_pos[0][1], i, gr))
+    if(!isConnected(mouse_pos[0][0] + (size_X * mouse_pos[0][1]), i, gr))
       continue;
 
     if(getQTable(QTable, state, i) > max) {
@@ -296,14 +296,14 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
    }
 
   int i = 0;
-  int mouse = mouse_pos[0][0] * size_X + mouse_pos[0][1];
+  int mouse = mouse_pos[0][0] + (size_X * mouse_pos[0][1]);
   int otloc;
 
   for(int j = 0; j < 5; j++) {
     if(cheeses[i][0] == -1) {
       continue;
     }
-    otloc = cheeses[i][0] * size_X + cheeses[i][1];
+    otloc = cheeses[i][0] + (size_X * cheeses[i][1]);
     features[i] = (graph_size - dists[mouse][otloc]) * 5;
     i++;
   }
@@ -312,7 +312,7 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
     if(cats[i][0] == -1) {
       continue;
     }
-    otloc = cats[i][0] * size_X + cats[i][1];
+    otloc = cats[i][0] + (size_X * cats[i][1]);
     features[i] = (graph_size - dists[mouse][otloc]) * -5;
     i++;
   }
@@ -360,7 +360,7 @@ void maxQsa(double gr[max_graph_size][4],double weights[25],int mouse_pos[1][2],
   for(int i = 0; i < 4; i++) {
     // skip wall
     // always have 1 spot to go by def of maze
-    if(!gr[mouse_pos[0][0] * size_X + mouse_pos[0][1]])
+    if(!gr[mouse_pos[0][0] + (size_X + mouse_pos[0][1])])
       continue;
 
     temp = Qsa(weights, features);
