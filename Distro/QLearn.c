@@ -325,7 +325,7 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   }
 
   for(int j = 0; j < 5; j++) {
-    if(cats[i][0] == -1) {
+    if(cats[j][0] == -1) {
       continue;
     }
     otloc = cats[j][0] + (size_X * cats[j][1]);
