@@ -10,15 +10,15 @@ mark.
 
 ________________________________________________
 
-Student Name 1 (last, first):
+Student Name 1 (last, first): Fung, Albion Ka Hei
 
-Student Name 2 (last, first):
+Student Name 2 (last, first): Law, Chi Fai
 
-Student number 1:
+Student number 1: 1002444321
 
 Student number 2:
 
-UTORid 1:
+UTORid 1: fungalbi
 
 UTORid 2:
 
@@ -28,7 +28,7 @@ READ THIS AND SIGN YOUR NAME AT THE END:
 honesty and plaguarism. All work submitted as part
 of this assignment is my own.
 
-	Signed: _(student 1 name here)__	_(student 2 name here)__
+	Signed: _Albion Ka Hei Fung__	_(student 2 name here)__
 
 
 (-5 marks for failing to provide the identifying
@@ -41,6 +41,9 @@ but explain carefully when needed.
 1 .- (1 mark) Explain your reward function. What game elements
       are used, and why you think this is a good reward function
       for this problem.
+      reward function: ate = +, eaten = - nothing otherwise. It is a good reward function
+      because it promotes the mouse to chase the cheese but also trying to evade the cat at the same time.
+
 
 2 .- These are multiple experiments (once you are sure your 
      QLearning code is working!) 
@@ -173,24 +176,24 @@ doesn't work, or what problems exist.
 	
 			Complete/Working	Partial		Not done
 
-QLearn 
- update
+QLearn
+ update                  x
 
 Reward
- function
+ function               x
 
 Decide
- action
+ action               x
 
-featureEval
+featureEval         x
 
-evaluateQsa
+evaluateQsa       x
 
-maxQsa_prime
+maxQsa_prime       x
 
-Qlearn_features
+Qlearn_features  x
 
-decideAction_features
+decideAction_features x
 
 _____________________________________________________
 
