@@ -69,7 +69,7 @@ but explain carefully when needed.
 
      (1 mark) Would the mouse keep improving and become invincible if
      you ran, say, 100,000,000 training rounds per batch?  
-        No, states with no solutions would exist, and running more rounds would not result in a solution for them.   
+        No, states with no solutions could exist, and running more rounds might not result in a solution for them.   
 
 4 .- Using the QTable saved from Experiment 2 (NO re-training!)
 
@@ -87,6 +87,7 @@ but explain carefully when needed.
 
      (1 mark) Compare with the rate obtained in experiment 2. What is happening here?
         Q table is experiences learnt from original seed, and given different seeds, not all data in Qtable are applicable and thus result in subpar winrate.
+        (mostly because the QTable learnt with a different maze, and some options it might not be available on the original maze which would actually be a better option here).
 
 5 .- Understanding the effects of state space on learning ability:
 
@@ -99,7 +100,7 @@ but explain carefully when needed.
 
      (1 mark) Compare the final winning rate with that from Experiment 2, what can
      you say about the difference in winning rates?
-        Bigger state space reduces the effectiveness of a Qtable and thus, lowers the winrate.
+        Bigger state space reduces the effectiveness of a Qtable since we need more trials to optimize more of the space, and thus, lowers the winrate.
 
 6 .- (2 marks) Is standard Q-Learning a rasonable strategy for environments
      that change constantly? discuss based on the above
@@ -110,9 +111,9 @@ but explain carefully when needed.
                explain why and how each feature is expected to contribute
 	       to helping your mouse win
 
-           Feature 1: Distance to Cheeses
+           Feature 1: Distance to Cheeses (up to 5 features, depending on # of cheeses on the field)
             Closer cheese are more attractive
-           Feature 2: Distance to Cats
+           Feature 2: Distance to Cats (up to 5 features, depending on # of catts on the field)
             Closer cats are more menacing
            Feature 3: Closest Cat
             Greater emphasis on the closest cat (greatest threat)
