@@ -168,19 +168,19 @@ but explain carefully when needed.
 
      Initial mouse winning rate (first rate obtained when training starts): 8.1498%
      
-     Mouse Winning Rate (from evaluation after training): 58.5854%
+     Mouse Winning Rate (from evaluation after training): 73.4133%
   
      (1 mark) # Experiment 9: Using the trained weights from Experiment 9, (no
      # re-training), run the evaluation on the 16x16 grid, 2 cats, 
      # 3 cheeses, cat-smartness=.9, and random seed 4289
      
-     Mouse Winning Rate (from evaluation after training): 58.6212%
+     Mouse Winning Rate (from evaluation after training): 72.5435%
 
      (1 mark) # Experiment 9: Using the trained weights from Experiment 9, (no
      # re-training), run the evaluation on the 32x32 grid, 2 cats, 
      # 3 cheeses, cat-smartness=.9, and random seed 4289
      
-     Mouse Winning Rate (from evaluation after training): 61.3071%
+     Mouse Winning Rate (from evaluation after training): 73.5526%
 
      (2 marks) Based on the last 3 experiments, what can you conclude regarding
      the usefulness and applicability of standard Q-Learning vs. 
