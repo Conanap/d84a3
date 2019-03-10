@@ -285,6 +285,7 @@ int feat_QLearn_action(double gr[max_graph_size][4],double weights[25], int mous
   int *choice = &temp;
   double tempd = -dinf;
   double *maxU = &tempd;
+
   maxQsa(gr, weights, mouse_pos, cats, cheeses, size_X, graph_size, maxU, choice);
 
   return *choice;		// <--- replace this while you're at it!
@@ -320,22 +321,29 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   int mouse = mouse_pos[0][0] + (size_X * mouse_pos[0][1]);
   int otloc;
 
-  for(int j = 0; j < 5 && i < 25; j++) {
-    if(cheeses[j][0] == -1) {
-      continue;
-    }
-    otloc = cheeses[j][0] + (size_X * cheeses[j][1]);
-    features[i] = (graph_size - dists[mouse][otloc]) * 5;
-    i++;
-  }
+  // for(int j = 0; j < 5 && i < 25; j++) {
+  //   if(cheeses[j][0] == -1) {
+  //     continue;
+  //   }
+  //   otloc = cheeses[j][0] + (size_X * cheeses[j][1]);
+  //   features[i] = (graph_size - dists[mouse][otloc]) * 5;
+  //   i++;
+  // }
 
-  for(int j = 0; j < 5 && i < 25; j++) {
-    if(cats[j][0] == -1) {
-      continue;
-    }
-    otloc = cats[j][0] + (size_X * cats[j][1]);
-    features[i] = (graph_size - dists[mouse][otloc]) * -5;
-    i++;
+  // for(int j = 0; j < 5 && i < 25; j++) {
+  //   if(cats[j][0] == -1) {
+  //     continue;
+  //   }
+  //   otloc = cats[j][0] + (size_X * cats[j][1]);
+  //   features[i] = (graph_size - dists[mouse][otloc]) * -5;
+  //   i++;
+  // }
+
+  while(i < 25) {
+    if(isSameSpot(mouse_pos[0], cheeses[0]))
+      features[i++] = 500;
+    else
+      features[i++] = -500;
   }
 
 }
@@ -375,13 +383,13 @@ void maxQsa(double gr[max_graph_size][4],double weights[25], int mouse_pos[1][2]
   double features[25] = {0};
   evaluateFeatures(gr, features, mouse_pos, cats, cheeses, size_X, graph_size);
 
-  *maxU = -inf;
+  *maxU = -dinf;
   double temp;
 
   for(int i = 0; i < 4; i++) {
     // skip wall
     // always have 1 spot to go by def of maze
-    if(!gr[mouse_pos[0][0] + (size_X * mouse_pos[0][1])])
+    if(!isConnected(mouse_pos[0][0] + (size_X * mouse_pos[0][1]), i, gr))
       continue;
 
     temp = Qsa(weights, features);
@@ -425,9 +433,9 @@ int isSameSpot(int a[2], int b[2]) {
 
 bool isConnected(int a, int b, double gr[max_graph_size][4])
 {
-	return gr[a][b];
-}
-
+ -1, should be in [0 3]!
+ -1, should be in [0 3]!
+ -1, should be in [0 3]!
 void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 {
 	for (int x = 0; x < size_X; x++)
