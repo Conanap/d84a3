@@ -245,6 +245,7 @@ void feat_QLearn_update(double gr[max_graph_size][4],double weights[25], double 
 
     for(int i = 0; i < 25; i++) {
       // wi = wi + alpha    [r      + gamma    Q(s’) - Q(s)] * fi(s)
+      // fprintf(stderr, "MAX YOU %f\n", maxU);
       weights[i] += alpha * (reward + lambda * maxU - qs) * features[i];
     }
 }
@@ -322,7 +323,9 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
       continue;
     }
     otloc = cheeses[j][0] + (size_X * cheeses[j][1]);
-    features[i] = (graph_size - dists[mouse][otloc]) / 10;
+    features[i] = (double) 1/ (double)(1 + (dists[mouse][otloc]));
+    // fprintf(stderr, "%f / %f = %f\n", (double) 95, (double) (1+(dists[mouse][otloc])), (double)((double) 95/ (double)(1 + (dists[mouse][otloc]))));
+    // fprintf(stderr, "%f\n", features[i]);
     // fprintf(stderr, "%d\n", dists[mouse][otloc]);
     i++;
   }
@@ -332,9 +335,10 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
       continue;
     }
     otloc = cats[j][0] + (size_X * cats[j][1]);
-    features[i] = (graph_size - dists[mouse][otloc]) * -1 / 10;
+    features[i] = (double) 1/ (double)(1 + (dists[mouse][otloc]));
     i++;
   }
+
 
   while(i < 25) {
     // if(isSameSpot(mouse_pos[0], cheeses[0]))
@@ -359,6 +363,7 @@ double Qsa(double weights[25], double features[25])
   double sum = 0;
 
   for(int i = 0; i < 25; i++) {
+    // fprintf(stderr, "WEIGHTS AND FEATURES WOAH: %f, %f\n", weights[i], features[i]);
     sum += weights[i] * features[i];
   }
   return sum;		// compute and return the Qsa value
@@ -407,6 +412,7 @@ void maxQsa(double gr[max_graph_size][4],double weights[25], int mouse_pos[1][2]
     
     evaluateFeatures(gr, features, nmouse, cats, cheeses, size_X, graph_size);
     temp = Qsa(weights, features);
+    // fprintf(stderr, "TEMPTMEPTMEPTMEPT: %f\n", temp);
     if(temp > *maxU) {
       *maxU = temp;
       *maxA = i;
