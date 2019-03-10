@@ -31,6 +31,7 @@
 
 #include "QLearn.h"
 #define inf 99999999
+#define dinf 99999999.99
 
 int dists[max_graph_size][max_graph_size];
 int distSet = 0;
@@ -241,8 +242,10 @@ void feat_QLearn_update(double gr[max_graph_size][4],double weights[25], double 
 
     double features[25] = {0};
     evaluateFeatures(gr, features, mouse_pos, cats, cheeses, size_X, graph_size);
-    double *maxU;
-    int *maxA;
+    double tempd = -dinf;
+    double *maxU = &tempd;
+    int temp = -1;
+    int *maxA = &temp;
     maxQsa(gr, weights, mouse_pos, cats, cheeses, size_X, graph_size, maxU, maxA);
     double qs = Qsa(weights, features);
 
@@ -278,8 +281,10 @@ int feat_QLearn_action(double gr[max_graph_size][4],double weights[25], int mous
   }
   
   // get max qsa
-  int *choice;
-  double *maxU;
+  int temp = -1;
+  int *choice = &temp;
+  double tempd = -dinf;
+  double *maxU = &tempd;
   maxQsa(gr, weights, mouse_pos, cats, cheeses, size_X, graph_size, maxU, choice);
 
   return *choice;		// <--- replace this while you're at it!
