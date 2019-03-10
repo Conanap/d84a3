@@ -36,6 +36,8 @@
 int dists[max_graph_size][max_graph_size];
 int distSet = 0;
 
+int deadend[max_graph_size] = {0};
+
 void QLearn_update(int s, int a, double r, int s_new, double *QTable)
 {
  /*
@@ -312,6 +314,9 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
    if(!distSet) {
      distSet = 1;
      fwInit(gr, size_X, graph_size);
+
+     for(int i = 0; i < max_graph_size; i++)
+      deadend[i] = -1;
    }
 
   int i = 0;
@@ -342,31 +347,32 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   }
 
   // no cat next step
-  for(int j = 0; j < 5 && i < 25; j++) {
-    if(cats[j][0] == -1) {
-      continue;
-    }
-    int nmouse[1][2] = {0};
-    for (int k = 0; k < 4; k++){
-      if(!k) {
-        nmouse[0][0] = mouse_pos[0][0];
-        nmouse[0][1] = mouse_pos[0][1] - 1;
-      } else if (k == 1) {
-        nmouse[0][0] = mouse_pos[0][0] + 1;
-        nmouse[0][1] = mouse_pos[0][1];
-      } else if (k == 2) {
-        nmouse[0][0] = mouse_pos[0][0];
-        nmouse[0][1] = mouse_pos[0][1] + 1;
-      } else {
-        nmouse[0][0] = mouse_pos[0][0] - 1;
-        nmouse[0][1] = mouse_pos[0][1];
-      }
-      if (isSameSpot(nmouse[0], cats[j]))
-        features[i] = -1;
-    }
-    i++;
-  }
+  // for(int j = 0; j < 5 && i < 25; j++) {
+  //   if(cats[j][0] == -1) {
+  //     continue;
+  //   }
+  //   int nmouse[1][2] = {0};
+  //   for (int k = 0; k < 4; k++){
+  //     if(!k) {
+  //       nmouse[0][0] = mouse_pos[0][0];
+  //       nmouse[0][1] = mouse_pos[0][1] - 1;
+  //     } else if (k == 1) {
+  //       nmouse[0][0] = mouse_pos[0][0] + 1;
+  //       nmouse[0][1] = mouse_pos[0][1];
+  //     } else if (k == 2) {
+  //       nmouse[0][0] = mouse_pos[0][0];
+  //       nmouse[0][1] = mouse_pos[0][1] + 1;
+  //     } else {
+  //       nmouse[0][0] = mouse_pos[0][0] - 1;
+  //       nmouse[0][1] = mouse_pos[0][1];
+  //     }
+  //     if (isSameSpot(nmouse[0], cats[j]))
+  //       features[i] = -1;
+  //   }
+  //   i++;
+  // }
 
+  features[i++] = isDeadend(mouse_pos[0][0], mouse_pos[0][1], size_X, gr) ? 1 : 0;
 
   while(i < 25) {
     // if(isSameSpot(mouse_pos[0], cheeses[0]))
@@ -535,4 +541,15 @@ void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 int manDist(int x1, int y1, int x2, int y2)
 {
 	return (abs(x1 - x2) + abs(y1 - y2));
+}
+
+bool isDeadend(int x, int y, int size_X, double gr[max_graph_size][4]) {
+	int pos = x + y * size_X;
+	if(deadend[pos] == -1) {
+		deadend[pos] = 1;
+		for(int i = 0; i < 4; i++)
+			deadend[pos] &= isConnected(pos, i, gr);
+	}
+
+	return deadend[pos];
 }

@@ -54,6 +54,7 @@ int getState(int mouse_loc[2], int cat_loc[2], int cheese_loc[2], int size_X, in
 double getQTable(double *QTable, int s, int a);
 double rngesus();
 int manDist(int x1, int y1, int x2, int y2);
+bool isDeadend(int x, int y, int size_X, double gr[max_graph_size][4]);
 
 #endif
 
