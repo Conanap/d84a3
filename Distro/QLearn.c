@@ -532,7 +532,7 @@ void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 	for (int i = 0; i < graph_size; i++)
 	{
 		dists[i][i] = 0;
-    next[i][i] = 0; // not sure if necessary? i think it is
+    next[i][i] = i;
 		if (i - 1 >= 0 && isConnected(i, 3, gr))
 		{ // L
 			dists[i][i - 1] = 1;
@@ -616,27 +616,9 @@ double hasCat(int mouse[2], int cats[5][2], int dir, int size_X) {
 }
 
 bool hasCatOnPath (int mouse[2], int cats[5][2], int cheese[0][1], int size_X){
-
-  int ret = 0;
-  /* int *path(int x, int y){
-      if (next[x][y] == NULL)
-        return []
-      int path[max_graph_size] = [x]
-      while (x != y){
-        x = next[x][y];
-        path.append(x);
-      }
-      return path;
-    }
-  */
   int next_pos = mouse[0] + (size_X * mouse[1]);
   fprintf(stderr, "next_pos atm: %d\n", next_pos);
   int final = cheese[0][0] + (size_X * cheese[0][1]);
-  if (next[next_pos][final] == -1){
-    fprintf(stderr, "error: cannot reach closest cheese\n");
-    return -1;
-    // error: cannot reach closest cheese
-  }
 
   int cat_pos[5];
   for (int i = 0; i < 5; i++){
@@ -653,5 +635,5 @@ bool hasCatOnPath (int mouse[2], int cats[5][2], int cheese[0][1], int size_X){
   }
 
 
-  return ret;
+  return 0;
 }
