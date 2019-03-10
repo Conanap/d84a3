@@ -578,20 +578,20 @@ bool isDeadend(int x, int y, int size_X, double gr[max_graph_size][4]) {
 	return deadend[pos];
 }
 
-int hasCat(int mouse[2], int cats[5][2], int dir, int size_X) {
+double hasCat(int mouse[2], int cats[5][2], int dir, int size_X) {
 
   int ret = 0;
 
   for(int i = 0; i < 5 && !ret; i++) {
     if(dir == 3)
-      ret |= cats[i][0] > mouse[0] - 5;
+      ret += cats[i][0] > mouse[0] - 5;
     else if(dir == 0)
-      ret |= cats[i][1] > mouse[1] - 5;
+      ret += cats[i][1] > mouse[1] - 5;
     else if(dir == 1)
-      ret |= cats[i][0] < mouse[0] + 5;
+      ret += cats[i][0] < mouse[0] + 5;
     else if(dir == 2)
-      ret |= cats[i][1] < mouse[1] + 5;
+      ret += cats[i][1] < mouse[1] + 5;
   }
 
-  return ret;
+  return (double)ret / 10;
 }
