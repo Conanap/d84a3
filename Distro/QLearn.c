@@ -315,7 +315,7 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   int mouse = mouse_pos[0][0] + (size_X * mouse_pos[0][1]);
   int otloc;
 
-  for(int j = 0; j < 5; j++) {
+  for(int j = 0; j < 5 && i < 25; j++) {
     if(cheeses[j][0] == -1) {
       continue;
     }
@@ -324,7 +324,7 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
     i++;
   }
 
-  for(int j = 0; j < 5; j++) {
+  for(int j = 0; j < 5 && i < 25; j++) {
     if(cats[j][0] == -1) {
       continue;
     }
