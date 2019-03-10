@@ -317,29 +317,32 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   int mouse = mouse_pos[0][0] + (size_X * mouse_pos[0][1]);
   int otloc;
 
-  // for(int j = 0; j < 5 && i < 25; j++) {
-  //   if(cheeses[j][0] == -1) {
-  //     continue;
-  //   }
-  //   otloc = cheeses[j][0] + (size_X * cheeses[j][1]);
-  //   features[i] = (graph_size - dists[mouse][otloc]) * 5;
-  //   i++;
-  // }
+  for(int j = 0; j < 5 && i < 25; j++) {
+    if(cheeses[j][0] == -1) {
+      continue;
+    }
+    otloc = cheeses[j][0] + (size_X * cheeses[j][1]);
+    features[i] = (graph_size - dists[mouse][otloc]) / 10;
+    // fprintf(stderr, "%d\n", dists[mouse][otloc]);
+    i++;
+  }
 
-  // for(int j = 0; j < 5 && i < 25; j++) {
-  //   if(cats[j][0] == -1) {
-  //     continue;
-  //   }
-  //   otloc = cats[j][0] + (size_X * cats[j][1]);
-  //   features[i] = (graph_size - dists[mouse][otloc]) * -5;
-  //   i++;
-  // }
+  for(int j = 0; j < 5 && i < 25; j++) {
+    if(cats[j][0] == -1) {
+      continue;
+    }
+    otloc = cats[j][0] + (size_X * cats[j][1]);
+    features[i] = (graph_size - dists[mouse][otloc]) * -1 / 10;
+    i++;
+  }
 
   while(i < 25) {
-    if(isSameSpot(mouse_pos[0], cheeses[0]))
-      features[i++] = 1;
-    else
-      features[i++] = -1;
+    // if(isSameSpot(mouse_pos[0], cheeses[0]))
+    //   features[i++] = 1;
+    // else
+    //   features[i++] = -1;
+
+    features[i++] = 0;
   }
 
 }
@@ -449,16 +452,17 @@ bool isConnected(int a, int b, double gr[max_graph_size][4])
  
 void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 {
-	for (int x = 0; x < size_X; x++)
+  fprintf(stderr, "new function who dis\n");
+	for (int x = 0; x < graph_size; x++)
 	{
-		for (int y = 0; y < graph_size / size_X; y++)
+		for (int y = 0; y < graph_size; y++)
 		{
 			dists[x][y] = inf;
 		}
 	}
 
 	// init connected
-	for (int i = 0; i < size_X; i++)
+	for (int i = 0; i < graph_size; i++)
 	{
 		dists[i][i] = 0;
 		if (i - 1 >= 0 && isConnected(i, 3, gr))
@@ -479,11 +483,11 @@ void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 		}
 	}
 
-	for (int k = 0; k < size_X; k++)
+	for (int k = 0; k < graph_size; k++)
 	{
-		for (int i = 0; i < size_X; i++)
+		for (int i = 0; i < graph_size; i++)
 		{
-			for (int j = 0; j < size_X; j++)
+			for (int j = 0; j < graph_size; j++)
 			{
 				if (dists[i][j] > dists[i][k] + dists[k][j])
 				{
