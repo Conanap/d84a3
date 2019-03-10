@@ -57,6 +57,7 @@ int manDist(int x1, int y1, int x2, int y2);
 bool isDeadend(int x, int y, int size_X, double gr[max_graph_size][4]);
 int countCats(int x, int y, int cats[5][2], int size_X);
 double hasCat(int mouse[2], int cats[5][2], int dir, int size_X);
+bool hasCatOnPath(int mouse[2], int cats[5][2], int cheese[0][1], int size_X);
 
 #endif
 

@@ -34,6 +34,7 @@
 #define dinf 99999999.99
 
 int dists[max_graph_size][max_graph_size];
+int next[max_graph_size][max_graph_size];
 int distSet = 0;
 
 int deadend[max_graph_size] = {0};
@@ -322,6 +323,7 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   int i = 0;
   int mouse = mouse_pos[0][0] + (size_X * mouse_pos[0][1]);
   int otloc;
+  int closecheese[0][1];
 
   double minCheese = inf;
   // dist to cheese
@@ -331,8 +333,11 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
     }
     otloc = cheeses[j][0] + (size_X * cheeses[j][1]);
     features[i] = (double) 1/ (double)(1 + (dists[mouse][otloc]));
-    if(minCheese > features[i])
+    if(minCheese > features[i]) {
       minCheese = features[i];
+      closecheese[0][0] = cheeses[j][0];
+      closecheese[0][1] = cheeses[j][1];
+    }
     // fprintf(stderr, "%f / %f = %f\n", (double) 95, (double) (1+(dists[mouse][otloc])), (double)((double) 95/ (double)(1 + (dists[mouse][otloc]))));
     // fprintf(stderr, "%f\n", features[i]);
     // fprintf(stderr, "%d\n", dists[mouse][otloc]);
@@ -394,7 +399,7 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
 
   features[i++] = isDeadend(mouse_pos[0][0], mouse_pos[0][1], size_X, gr) ? 1 : 0;
 
-
+  features[i++] = hasCatOnPath(mouse_pos[0], cats, closecheese, size_X);
 
   while(i < 25) {
     // if(isSameSpot(mouse_pos[0], cheeses[0]))
@@ -519,6 +524,7 @@ void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 		for (int y = 0; y < graph_size; y++)
 		{
 			dists[x][y] = inf;
+      next[x][y] = -1;
 		}
 	}
 
@@ -526,22 +532,32 @@ void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 	for (int i = 0; i < graph_size; i++)
 	{
 		dists[i][i] = 0;
+    next[i][i] = 0; // not sure if necessary? i think it is
 		if (i - 1 >= 0 && isConnected(i, 3, gr))
 		{ // L
 			dists[i][i - 1] = 1;
+      next[i][i - 1] = i;
+      fprintf(stderr, "L: next[%d][%d] == [%d]\n", i, (i-1), next[i][i-1]);
 		}
 		if (i - size_X >= 0 && isConnected(i, 0, gr))
 		{ // T
 			dists[i][i - size_X] = 1;
+      next[i][i - size_X] = i;
+      fprintf(stderr, "T: next[%d][%d] == [%d]\n", i, (i - size_X), next[i][i - size_X]);
 		}
 		if (i + 1 < graph_size && isConnected(i, 1, gr))
 		{ // R
 			dists[i][i + 1] = 1;
+      next[i][i + 1] = i;
+      fprintf(stderr, "R: next[%d][%d] == [%d]\n", i, (i+ 1), next[i][i+ 1]);
 		}
 		if (i + size_X < graph_size && isConnected(i, 2, gr))
 		{ // D
 			dists[i][i + size_X] = 1;
+      next[i][i + size_X] = i;
+      fprintf(stderr, "D: next[%d][%d] == [%d]\n", i, (i+ size_X), next[i][i+ size_X]);
 		}
+
 	}
 
 	for (int k = 0; k < graph_size; k++)
@@ -553,6 +569,8 @@ void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 				if (dists[i][j] > dists[i][k] + dists[k][j])
 				{
 					dists[i][j] = dists[i][k] + dists[k][j];
+          next[i][j] = next[k][j];
+          fprintf(stderr, "next[%d][%d] == next[%d][%d] @ %d\n", i, j, k, j, next[i][j]);
 				}
 			}
 		}
@@ -563,6 +581,7 @@ int manDist(int x1, int y1, int x2, int y2)
 {
 	return (abs(x1 - x2) + abs(y1 - y2));
 }
+
 
 bool isDeadend(int x, int y, int size_X, double gr[max_graph_size][4]) {
 	int pos = x + y * size_X;
@@ -594,4 +613,45 @@ double hasCat(int mouse[2], int cats[5][2], int dir, int size_X) {
   }
 
   return (double)ret / 10;
+}
+
+bool hasCatOnPath (int mouse[2], int cats[5][2], int cheese[0][1], int size_X){
+
+  int ret = 0;
+  /* int *path(int x, int y){
+      if (next[x][y] == NULL)
+        return []
+      int path[max_graph_size] = [x]
+      while (x != y){
+        x = next[x][y];
+        path.append(x);
+      }
+      return path;
+    }
+  */
+  int next_pos = mouse[0] + (size_X * mouse[1]);
+  fprintf(stderr, "next_pos atm: %d\n", next_pos);
+  int final = cheese[0][0] + (size_X * cheese[0][1]);
+  if (next[next_pos][final] == -1){
+    fprintf(stderr, "error: cannot reach closest cheese\n");
+    return -1;
+    // error: cannot reach closest cheese
+  }
+
+  int cat_pos[5];
+  for (int i = 0; i < 5; i++){
+    cat_pos[i] = cats[i][0] + (size_X * cats[i][1]);
+  }
+  
+  while (next_pos != final){
+    for (int i = 0; i < 5; i++){
+      if (next_pos == cat_pos[i])
+        return 1; // cat on path
+    }
+    fprintf(stderr,"loop de loop: %d vs %d, with next being: %d\n", next_pos, final, next[next_pos][final]);
+    next_pos = next[next_pos][final];
+  }
+
+
+  return ret;
 }
