@@ -360,6 +360,11 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   features[i++] = minCheese;
   features[i++] = (double)catD / (double)catC > size_X / 2.5 ? 1 : 0;
 
+  features[i++] = hasCat(mouse_pos[0], cats, 0, size_X);
+  features[i++] = hasCat(mouse_pos[0], cats, 1, size_X);
+  features[i++] = hasCat(mouse_pos[0], cats, 2, size_X);
+  features[i++] = hasCat(mouse_pos[0], cats, 3, size_X);
+
 
   // no cat next step
   // for(int j = 0; j < 5 && i < 25; j++) {
@@ -571,4 +576,22 @@ bool isDeadend(int x, int y, int size_X, double gr[max_graph_size][4]) {
 	}
 
 	return deadend[pos];
+}
+
+int hasCat(int mouse[2], int cats[5][2], int dir, int size_X) {
+
+  int ret = 0;
+
+  for(int i = 0; i < 5 && !ret; i++) {
+    if(dir == 3)
+      ret |= cats[i][0] > mouse[0] - 5;
+    else if(dir == 0)
+      ret |= cats[i][1] > mouse[1] - 5;
+    else if(dir == 1)
+      ret |= cats[i][0] < mouse[0] + 5;
+    else if(dir == 2)
+      ret |= cats[i][1] < mouse[1] + 5;
+  }
+
+  return ret;
 }
