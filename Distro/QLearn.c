@@ -433,9 +433,9 @@ int isSameSpot(int a[2], int b[2]) {
 
 bool isConnected(int a, int b, double gr[max_graph_size][4])
 {
- -1, should be in [0 3]!
- -1, should be in [0 3]!
- -1, should be in [0 3]!
+  return gr[a][b];
+}
+ 
 void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 {
 	for (int x = 0; x < size_X; x++)
