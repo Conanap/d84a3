@@ -564,7 +564,10 @@ bool isDeadend(int x, int y, int size_X, double gr[max_graph_size][4]) {
 	if(deadend[pos] == -1) {
 		deadend[pos] = 1;
 		for(int i = 0; i < 4; i++)
-			deadend[pos] &= isConnected(pos, i, gr);
+			deadend[pos] += isConnected(pos, i, gr);
+
+    if(deadend[pos] == 1)
+      deadend[pos] = 0;
 	}
 
 	return deadend[pos];
