@@ -318,6 +318,7 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   int mouse = mouse_pos[0][0] + (size_X * mouse_pos[0][1]);
   int otloc;
 
+  // dist to cheese
   for(int j = 0; j < 5 && i < 25; j++) {
     if(cheeses[j][0] == -1) {
       continue;
@@ -330,12 +331,39 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
     i++;
   }
 
+  // dist to cats
   for(int j = 0; j < 5 && i < 25; j++) {
     if(cats[j][0] == -1) {
       continue;
     }
     otloc = cats[j][0] + (size_X * cats[j][1]);
     features[i] = (double) 1/ (double)(1 + (dists[mouse][otloc]));
+    i++;
+  }
+
+  // no cat next step
+  for(int j = 0; j < 5 && i < 25; j++) {
+    if(cats[j][0] == -1) {
+      continue;
+    }
+    int nmouse[1][2] = {0};
+    for (int k = 0; k < 4; k++){
+      if(!k) {
+        nmouse[0][0] = mouse_pos[0][0];
+        nmouse[0][1] = mouse_pos[0][1] - 1;
+      } else if (k == 1) {
+        nmouse[0][0] = mouse_pos[0][0] + 1;
+        nmouse[0][1] = mouse_pos[0][1];
+      } else if (k == 2) {
+        nmouse[0][0] = mouse_pos[0][0];
+        nmouse[0][1] = mouse_pos[0][1] + 1;
+      } else {
+        nmouse[0][0] = mouse_pos[0][0] - 1;
+        nmouse[0][1] = mouse_pos[0][1];
+      }
+      if (isSameSpot(nmouse[0], cats[j]))
+        features[i] = -1;
+    }
     i++;
   }
 
