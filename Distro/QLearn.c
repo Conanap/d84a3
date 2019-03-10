@@ -316,10 +316,10 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   int otloc;
 
   for(int j = 0; j < 5; j++) {
-    if(cheeses[i][0] == -1) {
+    if(cheeses[j][0] == -1) {
       continue;
     }
-    otloc = cheeses[i][0] + (size_X * cheeses[i][1]);
+    otloc = cheeses[j][0] + (size_X * cheeses[j][1]);
     features[i] = (graph_size - dists[mouse][otloc]) * 5;
     i++;
   }
@@ -328,7 +328,7 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
     if(cats[i][0] == -1) {
       continue;
     }
-    otloc = cats[i][0] + (size_X * cats[i][1]);
+    otloc = cats[j][0] + (size_X * cats[j][1]);
     features[i] = (graph_size - dists[mouse][otloc]) * -5;
     i++;
   }
@@ -352,7 +352,7 @@ double Qsa(double weights[25], double features[25])
   return sum;		// compute and return the Qsa value
 }
 
-void maxQsa(double gr[max_graph_size][4],double weights[25],int mouse_pos[1][2], int cats[5][2], int cheeses[5][2], int size_X, int graph_size, double *maxU, int *maxA)
+void maxQsa(double gr[max_graph_size][4],double weights[25], int mouse_pos[1][2], int cats[5][2], int cheeses[5][2], int size_X, int graph_size, double *maxU, int *maxA)
 {
  /*
    Given the state represented by the input positions for mouse, cats, and cheese, this function evaluates
@@ -376,7 +376,7 @@ void maxQsa(double gr[max_graph_size][4],double weights[25],int mouse_pos[1][2],
   for(int i = 0; i < 4; i++) {
     // skip wall
     // always have 1 spot to go by def of maze
-    if(!gr[mouse_pos[0][0] + (size_X + mouse_pos[0][1])])
+    if(!gr[mouse_pos[0][0] + (size_X * mouse_pos[0][1])])
       continue;
 
     temp = Qsa(weights, features);
