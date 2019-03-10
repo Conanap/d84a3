@@ -323,6 +323,7 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   int mouse = mouse_pos[0][0] + (size_X * mouse_pos[0][1]);
   int otloc;
 
+  double minCheese = inf;
   // dist to cheese
   for(int j = 0; j < 5 && i < 25; j++) {
     if(cheeses[j][0] == -1) {
@@ -330,12 +331,17 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
     }
     otloc = cheeses[j][0] + (size_X * cheeses[j][1]);
     features[i] = (double) 1/ (double)(1 + (dists[mouse][otloc]));
+    if(minCheese > features[i])
+      minCheese = features[i];
     // fprintf(stderr, "%f / %f = %f\n", (double) 95, (double) (1+(dists[mouse][otloc])), (double)((double) 95/ (double)(1 + (dists[mouse][otloc]))));
     // fprintf(stderr, "%f\n", features[i]);
     // fprintf(stderr, "%d\n", dists[mouse][otloc]);
     i++;
   }
 
+  int catC = 0;
+  int catD = 0;
+  int minCat = inf;
   // dist to cats
   for(int j = 0; j < 5 && i < 25; j++) {
     if(cats[j][0] == -1) {
@@ -343,8 +349,17 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
     }
     otloc = cats[j][0] + (size_X * cats[j][1]);
     features[i] = (double) 1/ (double)(1 + (dists[mouse][otloc]));
+    catC++;
+    catD += features[i];
+    if(minCat > features[i])
+      minCat = features[i];
     i++;
   }
+
+  features[i++] = minCat;
+  features[i++] = minCheese;
+  features[i++] = (double)catD / (double)catC > size_X / 2.5 ? 1 : 0;
+
 
   // no cat next step
   // for(int j = 0; j < 5 && i < 25; j++) {
@@ -373,6 +388,8 @@ void evaluateFeatures(double gr[max_graph_size][4], double features[25], int mou
   // }
 
   features[i++] = isDeadend(mouse_pos[0][0], mouse_pos[0][1], size_X, gr) ? 1 : 0;
+
+
 
   while(i < 25) {
     // if(isSameSpot(mouse_pos[0], cheeses[0]))
@@ -492,7 +509,6 @@ bool isConnected(int a, int b, double gr[max_graph_size][4])
  
 void fwInit(double gr[max_graph_size][4], int size_X, int graph_size)
 {
-  fprintf(stderr, "new function who dis\n");
 	for (int x = 0; x < graph_size; x++)
 	{
 		for (int y = 0; y < graph_size; y++)
